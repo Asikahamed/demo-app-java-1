@@ -90,21 +90,3 @@ mvn test
 ```
 
 ---
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- Built with Spring Boot framework
-- Icons and badges from Shields.io
-- Thanks to all contributors who help improve this project
-
----
-
-⭐ **Star this repository if you find it helpful!** ⭐
