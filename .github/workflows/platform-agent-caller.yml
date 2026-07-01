@@ -3,7 +3,7 @@ name: Platform Agent
 on:
   push:
       branches:
-        - feature/v1
+        - main
 
   workflow_dispatch:
 
