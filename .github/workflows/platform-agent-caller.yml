@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   platform-agent:
-    uses: Asikahamed/Platform-agents/.github/workflows/platform-agent-reusable.yml@main
+    uses: Asikahamed/Platform-agents/.github/workflows/platform-agent-reusable.yml@feature/deployment
 
     with:
       app_repository: ${{ github.repository }}
