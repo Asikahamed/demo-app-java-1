@@ -1,0 +1,109 @@
+name: Prisma Security Scan
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - feature/**
+
+  pull_request:
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+
+##############################################################################
+# Prisma Security Scan
+##############################################################################
+
+  prisma:
+
+    name: Prisma Security Scan
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+##############################################################################
+# Checkout
+##############################################################################
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+##############################################################################
+# Run Checkov Scan
+##############################################################################
+
+      - name: Run Prisma Checkov Scan
+        uses: bridgecrewio/checkov-action@v12
+        with:
+
+          directory: .
+
+          framework: >
+            terraform,
+            github_actions,
+            dockerfile,
+            secrets
+
+          output_format: cli,sarif
+
+          output_file_path: console,results.sarif
+
+          download_external_modules: true
+
+          quiet: true
+
+          soft_fail: false
+
+          hard_fail_on: HIGH,CRITICAL
+
+##############################################################################
+# Upload SARIF
+##############################################################################
+
+      - name: Upload SARIF Report
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: results.sarif
+
+##############################################################################
+# Upload Scan Report
+##############################################################################
+
+      - name: Upload Scan Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: prisma-security-report
+          path: results.sarif
+
+##############################################################################
+# Pipeline Summary
+##############################################################################
+
+      - name: Pipeline Summary
+        if: always()
+        run: |
+          echo "========================================"
+          echo "Prisma Security Scan"
+          echo "========================================"
+          echo "Repository   : ${{ github.repository }}"
+          echo "Branch       : ${{ github.ref_name }}"
+          echo ""
+          echo "Scans Performed"
+          echo "  ✓ Terraform"
+          echo "  ✓ Dockerfile"
+          echo "  ✓ GitHub Actions"
+          echo "  ✓ Secrets"
+          echo ""
+          echo "Quality Gate : HIGH / CRITICAL"
+          echo "SARIF Report : results.sarif"
+          echo "========================================"
